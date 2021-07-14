@@ -1,66 +1,97 @@
-# Babel?
+# 빌드와 번들(feat. Webpack & Babel)
 
-### uglify & minify를 해준다
+## 번들링은 왜 필요할까? 웹팩은 왜 사용하는걸까?
+React에서는 컴포넌트를 이용해 기능 및 UI를 모듈화시키게 되는데, 번들링은 이렇게 모듈화 시킨 자바스크립트 파일들을 묶어준다. 웹팩과 같은 번들러들은 서로 의존성을 가진 여러 JS/TS파일(모듈)들을 하나의 번들 파일로 묶어주는 역할을 한다.
 
-- minify: 최적화!
-- uglify: 소스를 사람들이 못알아보게하깅
+1. ### 네트워크 요청/응답 시간을 줄일 수 있다
+    서버에 같은 타입의 파일들을 묶어서 한번에 요청하고 응답을 받게되면, 네트워크 코스트가 줄어들어 속도가 더 빨라진다.
+2. ### 웹팩의 development & production mode
+    웹팩은 development와 production 두 가지 모드를 지원하는데 dev으로 번들을 하면 개발자들이 알아볼 수 있는, 줄바꿈이 된 파일로 번들이 되고 prod 모드로 번들하게 되면 uglified & minified 된 파일로 번들된다.
+    > 웹팩을 이용한 결과물의 예: index.html & index.js  
+    > - 번들러는 예를들어 var a = "천"+"주"+"원" 으로 할당된 변수를 var = "천주원" 으로 바꿔주는 것 과 같은 작업을 한다.
+    > - 크로스브라우징을 위해 번들 과정에서 바벨을 통해 트랜스파일링을 통해 es버젼을 내릴 수 있다.
+3. ### 바벨과 연결해 바벨의 코드 트랜스파일링과 웹팩을 이용한 번들링을 동시에 할 수 있어서 효율적이다.  
+<br/>
 
-### bundling = uglify + minify
+## 웹팩을 조금 더 알아보자.
+웹팩의 중요한 구성 요소는 entry, output, module, plugins 다.  
+웹팩 config파일을 열어 웹팩의 동작을 알아보려면 entry에서 output까지의 중간에 어떤 동작을 하도록 설정해뒀는지를 보면 된다.  
+아래 codesketch-gui의 webpack.config.js 코드를 예시로 들어 보자.
+```javascript   
+    module.exports = {
+    mode: 'production',
+    entry: {
+        main: './src/index.tsx',
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js'],
+    },
+    devtool: 'eval-cheap-source-map',
+    devServer: {
+        hot: true,
+        overlay: true,
+        writeToDisk: true,
+    },
+    output: {
+        filename: 'react-template.min.js',
+        path: path.resolve(__dirname, 'dist'),
+    },
+```
+웹팩은 번들을 시작할때 config 파일의 entry에 설정돼 있는 파일, 즉 여기서는 `./src` 하위의 `index.tsx`를 바라보는데, 요즘의 리액트같은 SPA 개발환경의 경우 최종적으로 모든 모듈들이 의존성을 갖고 src 하위의 index 파일에 모이기 때문에 이처럼 entry를 설정한다. **(리액트 cra 보일러플레이트를 사용할 경우에 웹팩은 react-script 모듈 안에 숨겨져있다.)**    
+output은 최종적으로 번들링 된 결과물 파일의 이름과 해당 파일이 담길 path를 지정해주는 곳이다.   
 
-- webpack: 번들러 / 결과물: ex)index.html & index.js파일을
-  > 번들과정에서 바벨을 통해서 트랜스파일링을 해서 버전을 내릴 수 있다.
-- 번들러: var a = "천"+"주"+ 원 => var a = "천주원" 처럼 최적화되게 한 번 바꿔줌
+<br/>
 
-### google closer library => 퍼포먼스 최적화의 목적이 있음! 찾아봐야함
+이제 아래 코드와 함께 module을 살펴보자.
+```javascript
+module: {
+    rules: [
+      // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
+    ],
+  },
+```
+웹팩은 자바스크립트밖에 알아들을 수 없다. 그래서 로더를 이용해야 한다. 로더는 자바스크립트 이외의 다른 리소스들, 예를들어 타입스크립트 파일이나 css나 svg파일 등 과 같은 파일들 또한 웹팩이 이해할 수 있게끔 바꿔주는 역할을 한다.  
+간단한 예로 `ts-loader`와 `babel-loader`를 들 수 있다. 앞서 얘기한 것 처럼 타입스크립트를 ES5로 변환할때 `ts-loader`를 이용할 수 있고, ES6를 ES5로 변환할 때는 바벨을 사용할 수 있는데 위의 코드상에는 없지만, 웹팩 설정내에서 바벨을 사용하기 위해서는 `babel-loader`를 이용할 수 있다. 
+위 코드블럭에 쓰인 `style-loader`, `css-loader`, `sass-loader` 또한 style sheet의 자바스크립트로의 변환 및 적용을 위해 많이 사용되며, svg-loader 를 이용해 svg파일또한 자바스크립트로 변환할 수 있다.  
+~~*(이 역시 리액트애는 숨겨져있어서, 난 웹팩을 공부하기 전엔 svg파일 변환이 타입스크립트 => 자바스크립트 변환될 때 알아서 되는 줄 알았다)*~~  
+  
+<br/>
+마지막으로 plugins를 살펴보자.
 
-### TypeScript 가 생긴 이유?
+```javascript
+plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: './public/index.html',
+    }),
+  ],
+```
+플러그인은 빌드의 결과물을 처리한다. 웹팩의 번들 마무리를 도와주는 셈이다. 위 코드에는 없지만 이 과정에서 앞서 말한 uglify와 minify도 설정할 수 있다. 위에서 사용된 `CleanWebpackPlugin`은 번들링 이전 결과물을 제거하는 플러그인이다. `HtmlWebpackPlugin`은 index.html에 번들링된 css파일과 js파일을 각각 link, script로 자동으로 추가해주는 플러그인이다.
 
-<details>
-컴파일러를 사용하면 무겁고 컴파일러도 따로 만들어조야한다.
-(컴파일해서 실행파일 만들고 떨궈주고 하는애들 = c, c++)
-개발할 당시는 인터프리터가 빠르지만 다 개발하고 배포할때는 컴파일러 방식으로 된 애가 빠르다. 안정성도 ㅅㅌㅊ <br/>
-컴파일을 안하는 자바스크립트는, 런타임시에만 발생하는 에러가 있고 예외가 자꾸 터져서 타입스크립트를 쓰게됨<br />
-타입스크립트의 모토? super-set. 타입스크립트는 ? 자바스크립트 + ES6 상위에 타입스크립트가 있다 <br />
-브라우저는 ts를 못알아들어서 tsc(typscript compiler)를 써서 es5로 바꾸는데, tsc가 babel을 이용한다. <br />
-리액트에서 쓰는 jsx => es5 해주는것도 바벨이다. <br />
-바벨이 이 모든 기능을 갖고있지 않아서 preset 어쩌고 하는 plugin을 설치한다.
-ts로 개발하고 => js로 바꿈 (via tsc) => 이렇게 바꿔서 나온 js를 번들(웹팩만 쓰는거 아니고 걸프 써도되고) <br />
-... 위 방법대로 하면 귀찮으니까 웹팩으로 한번에 묶어서 할 수 잇다.<br />
-웹팩은 그니깐 개발하고 배포할때만 필요한거야 <br />
-웹팩 has plugins, and loader <br/>
-plugin: add-ons 같은 기능. 웹팩에서 번들 하기를 도와줌. html-webpack-plugin => index.html에 js결과물을 묶어줌 <br/>
-loader: 바벨 같은 애들. 번들하는 과정 자체에 필요한애들. babel-loader(transplile, 바벨의 역할을 해주는 애), scss-loader(scss to css), svg-loader etc... <br/>
-+++ts config에서 target 및 preset 설정 가능~!~! <br/>
-</details>
 
-### 웹팩과 바벨은 배포된상태에서는 쓸모업다.
-
-빌드 !== 번들
-번들: 여러파일을 하나로 묶어주는거 <br />
-빌드: 몰라 <br/>
-
-### 웹팩은 개발이 아니다. 웹팩은 설정이다.
-
-ex: webpack.config.js => mode: 'production' || 'development' <br/>
-development 로 번들하면 우리가 알아볼 수 있는 코드로 나오고, production 으로 번들하면 uglify 랑 minify를 해줌 <br />
-webpack은 entry 와 output 사이에 어떤걸 실행시키느냐가 중요함. <br/>
-webpack은 번들을 시작할때 엔트리에 설정돼있는 파일을 보는데, 그 파일은 대부분 src루트에 index.js 보게 해둔다. <br/>
-이렇게 할 수 있는 이유? 리액트건 뷰건 앵귤러건 현대 클라이언트들이 SPA를 쓰니까, index.html 하나만 뽑으면 되눈고양 <br/>
-bundler 는 임포트 안되고 안쓰이는애들 트랜스파일링 안해줌 왜냐면 쓸모없는새끼니까. <br/>
-entry를 보고 시작해서, output에 명시돼있는 파일로 떨궈준다! <br />
-modules: loaders <br/>
-plugins: plugins <br/>
-웹팩내부에서 바벨을 쓰는 방법? : 바벨 loader. 그래서 웹팩을 통해서만 쓸라면 .babelrc 없어두댕
-
-dev 와 prod를 구분할 줄 알아야해!
-dev 디펜던시는 개발할때 만 쓰이고, 배포할때는 안들어감!
-그냥 디펜던시는 배포할때도 들어가야함 <br/>
-바벨, 웹팩은 dev dependencies <br />
-웹팩과 바벨이 하는 역할은? 결과물만 만드는 것! 이과정이 CI <br />
-
-### webpack 과 babel의 상관관계
-
-### boilerplate === cra
-
-boilerplate => 내가만든 프로젝트 템플릿~~!!
-cra =>
+## 그럼 바벨은 뭔데?
+바벨은 공식문서에서 스스로를 자바스크립트 [컴파일러/트랜스파일러](https://developer.mozilla.org/ko/docs/Glossary/Compile)다. 위에서 적은 바와 같이, 크로스브라우징 및 자바스크립트가 동작하는 각기다른 여러 환경에서 각각 다른 자바스크립트 버젼을 필요로 할 경우가 많기때문에 바벨을 이용해 통해 모든 자바스크립트 환경에서 정상동작할 수 있도록 트랜스파일링 할 수 있다. 웹팩과 함께 주로 사용되며, 웹팩 내부에서는 babel-loader를 이용해 사용할 수 있다. 웹팩을 통해서만 사용될 경우 바벨을 설정하는 .babelrc 파일은 필요없다.
