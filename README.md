@@ -1,7 +1,7 @@
 ## 공부해야 할 것
 
 - [x] [빌드와 번들(feat. Webpack & Babel)](./md/details/bundle.md)
-- [ ] [웹 애플리케이션의 성능 지표와 개선법](./md/details/web-performance.md)
+- [ ] [웹 어플리케이션의 성능 지표와 최적화](./md/details/web-performance.md)
   - code splitting
 - [ ] 좋은 컴포넌트란 ?
   - interface, 사용성, 확장성, 유지보수 등의 관점
