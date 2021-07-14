@@ -8,12 +8,13 @@
   - 좋은 컴포넌트의 특징?
   - 컴포넌트를 설계하는 여러가지 방법과 내가(우리팀이) 채택한 방법과 그 이유
   - 스타일드 컴포넌트를 사용하는 이유와 장단점
-- [ ] 리액트나 vue, angular 등을 사용하는 이유
-- [ ] 리액트 context api와 hooks, useContext, custom hooks
-- [ ] 브라우저에서 영구적으로 존재하는 저장소(ex: local storage)의 종류와 기능
-- [ ] 브라우저 렌더 단계
+- [ ] about React
+    - React나 Vue, Angular 등을 사용하는 이유
+    - 리액트 context api와 hooks, useContext, custom hooks
+- [ ] about Browser
+    - 브라우저에서 영구적으로 존재하는 저장소(ex: local storage)의 종류와 기능
+    - 브라우저 렌더 단계
 
-> Hook은 함수 컴포넌트에서 React state와 생명주기 기능(lifecycle features)을 “연동(hook into)“할 수 있게 해주는 함수입니다. Hook은 class 안에서는 동작하지 않습니다. 대신 class 없이 React를 사용할 수 있게 해주는 것입니다.
 
 ### references
 
