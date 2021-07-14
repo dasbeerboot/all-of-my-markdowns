@@ -1,8 +1,8 @@
 ## 공부해야 할 것
 
-- [x] [빌드와 번들(feat. Webpack & Babel)](./babel.md)
-  - 빌드 후 html과 js파일을 각각 하나씩만 만들어 낼 경우, 로드하는데 시간이 오래걸려서 성능이 떨어지는데, 해결방법이 있나? 분리해서 빌드or번들 하는 방법? (code splitting, 웹 성능 최적화 - 리소스 로딩 관련)
-- [ ] 웹 애플리케이션의 성능 지표와 개선법
+- [x] [빌드와 번들(feat. Webpack & Babel)](./details/bundle.md)
+- [ ] [웹 애플리케이션의 성능 지표와 개선법](./details/web-performance.md)
+  - code splitting
 - [ ] 좋은 컴포넌트란 ?
   - interface, 사용성, 확장성, 유지보수 등의 관점
   - 좋은 컴포넌트의 특징?
