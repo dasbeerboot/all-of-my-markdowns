@@ -70,7 +70,7 @@
                 위와 같이 entry에 index 와 another로 나눠 코드를 수동으로 분할할 수 있으나, 엔트리 청크 사이에 중복된 모듈이 있는 경우 중복된 내용이 두 번들에 모두 포함되고, 코어 어플리케이션 로직을 통한 코드의 동적 분할에는 사용할 수 없다는 단점이 있다.  
             2. `Entry dependencies` 또는 `SplitChunksPlugin`을 사용하여 중복 청크를 제거하고 청크 분할하기.
             3. import() 문법(dynamic import) 사용하기.
-            ```javascript
+                ```javascript
                 //before
                 import { add } from './math';
                 console.log(add(16, 26));
@@ -79,7 +79,7 @@
                 import("./math").then(math => {
                 console.log(math.add(16, 26));
                 });
-            ```
+                ```
             위와 같이 모듈을 리액트 파일 최상단에서 import 해와서 쓰는 대신에, import() 문법을 사용하여 코드를 분할할 수 있다. import() 호출은 내부적으로 promises 구문을 사용하므로 async 함수와 함께 사용할 수 있다. 웹팩은 번들링 시 import() 구문을 만나게 되면 어플리케이션의 코드를 분할한다. 
     - **JS, CSS 파일 캐싱하기(server side)** : 캐시의 종류는 브라우저 캐시, 프록시 캐시, 게이트웨이 캐시가 있다.
 4. ### 페이지 렌더링 최적화
