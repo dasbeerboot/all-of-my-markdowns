@@ -64,6 +64,7 @@
                     entry: {
                         index: './src/index.js',
                         another: './src/another-module.js',
+                    }
                 },
                 ```
                 위와 같이 entry에 index 와 another로 나눠 코드를 수동으로 분할할 수 있으나, 엔트리 청크 사이에 중복된 모듈이 있는 경우 중복된 내용이 두 번들에 모두 포함되고, 코어 어플리케이션 로직을 통한 코드의 동적 분할에는 사용할 수 없다는 단점이 있다.  
