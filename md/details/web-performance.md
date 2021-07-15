@@ -41,7 +41,7 @@
      - **블록 차단 리소스 최적화** : HTML을 파싱할 때 CSS나 JS를 만나게 되면, 파싱을 중단하고 해당 파일을 우선적으로 파싱하거나 다운로드 한 후 실행하게 되는데, 이렇듯 HTML 파싱을 차단하는 요소를 블록 차단 리소스라고 한다. ([위의 두 번째 이미지](#웹-어플리케이션의-성능-지표)하단에 위치한 "*Total blocking time*" 참고)  
          1. CSS는 `<head>` 태그 안에, `<script>`로 실행되는 JS는 `<body>` 맨 하단에 위치시킨다.
          2. 반응형 어플리케이션의 경우, media attribute로 어떤 디바이스인지에 따라 해당 CSS 적용 여부를 명시한다.
-         3. `<noscript>`
+         3. `<noscript>` 사용하기
      - **리소스를 외부에 배치하여 사용** : 리소스를 외부에 배치하여 사용하면 캐싱을 활용할 수 있어 페이지 로드 속도를 향상시킬 수 있다.
      - **DOM 엘리먼트 depth 줄이기**
      - **불필요한 repainting 줄이기** : 크롬 개발자도구의 Rendering 탭을 열고 Paint flashing 옵션을 체크하면 어느 시점에 어떤 영역이 다시 그려지는지 확인이 가능하다.
@@ -60,10 +60,10 @@
             1. 웹팩 entry 설정을 사용하여 수동으로 코드 분할하기.  
                 ```json
                 module.exports = {
-                mode: 'development',
-                entry: {
-                    index: './src/index.js',
-                    another: './src/another-module.js',
+                    mode: 'development',
+                    entry: {
+                        index: './src/index.js',
+                        another: './src/another-module.js',
                 },
                 ```
                 위와 같이 entry에 index 와 another로 나눠 코드를 수동으로 분할할 수 있으나, 엔트리 청크 사이에 중복된 모듈이 있는 경우 중복된 내용이 두 번들에 모두 포함되고, 코어 어플리케이션 로직을 통한 코드의 동적 분할에는 사용할 수 없다는 단점이 있다.  
