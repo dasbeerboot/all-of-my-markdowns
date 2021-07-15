@@ -58,12 +58,12 @@
 
         - 웹팩으로 번들시 코드 분할(Code Splitting)하기 ([웹팩 공식문서 보러가기](https://webpack.kr/guides/code-splitting/)):  
             1. 웹팩 entry 설정을 사용하여 수동으로 코드 분할하기.  
-                ```json
+                ```
                 module.exports = {
                     mode: 'development',
                     entry: {
                         index: './src/index.js',
-                        another: './src/another-module.js',
+                        another: './src/another-module.js'
                     }
                 },
                 ```
