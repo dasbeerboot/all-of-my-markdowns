@@ -1,4 +1,4 @@
-## 공부해야 할 것
+## 목록
 
 - [x] [빌드와 번들(feat. Webpack & Babel)](./md/details/bundle.md)
 - [x] [웹 어플리케이션의 성능 지표와 최적화](./md/details/web-performance.md)
@@ -11,3 +11,4 @@
   - useEffect의 이름이 왜 useEffect인지
 - [ ] 클래스형 컴포넌트 vs 함수형 컴포넌트
 - [ ] 자바스크립트의 비동기처리를 자세히 알아보자
+- [x] [ES6의 향상된 객체 문법과 더 효율적인 데이터바인딩](./data-binding.md)
